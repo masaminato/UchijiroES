@@ -1,41 +1,110 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>フレーズカード</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 24px;
-      background: #f7f7f7;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>琉球語フレーズカード</title>
 
-    .card {
-      max-width: 900px;
-      margin: 0 auto;
-      cursor: pointer;
-    }
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f7f7f7;
+  font-family: sans-serif;
+}
 
-    .card img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-  </style>
+.card {
+  max-width: 1000px;
+  margin: 0 auto 20px auto;
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card:hover {
+  opacity: 0.95;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="card" onclick="playAudio('audio/01_ugamjabura.mp3')">
-    <img src="images/01_ugamjabura.png" alt="うがみやぶらー">
-  </div>
+<div class="card" onclick="playAudio('audio/01_ugamjabura.mp3')">
+  <img src="images/01_ugamjabura.png" alt="">
+</div>
 
-  <script>
-    function playAudio(src) {
-      const audio = new Audio(src);
-      audio.play();
-    }
-  </script>
+<div class="card" onclick="playSequentialAudio([
+  'audio/02_matajaa.mp3',
+  'audio/03_matadoo.mp3'
+])">
+  <img src="images/02_mataja_matado.png" alt="">
+</div>
+
+<div class="card" onclick="playAudio('audio/05_namakara_hazjimijabundoo.mp3')">
+  <img src="images/image03_namakara.png" alt="">
+</div>
+
+<div class="card" onclick="playAudio('audio/07_urisji_owajabundoo.mp3')">
+  <img src="images/04_urisji.png" alt="">
+</div>
+
+<div class="card" onclick="playAudio('audio/09_tiiootsjitaborijoo.mp3')">
+  <img src="images/05_tii.png" alt="">
+</div>
+
+<div class="card" onclick="playAudio('audio/11_masanuasjimurojaburaa.mp3')">
+  <img src="images/06_murojabura.png" alt="">
+</div>
+
+<div class="card" onclick="playAudio('audio/15_sjitteemasaajabutandoo.mp3')">
+  <img src="images/07_masaayabutando.png" alt="">
+</div>
+
+<div class="card" onclick="playAudio('audio/13_mihedirodoo.mp3')">
+  <img src="images/08_mihedirodo.png" alt="">
+</div>
+
+<script>
+let currentAudio = null;
+
+function stopCurrentAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+}
+
+function playAudio(src) {
+  stopCurrentAudio();
+
+  currentAudio = new Audio(src);
+  currentAudio.play();
+}
+
+async function playSequentialAudio(files) {
+  stopCurrentAudio();
+
+  for (const file of files) {
+    await new Promise((resolve) => {
+      currentAudio = new Audio(file);
+
+      currentAudio.addEventListener('ended', resolve);
+      currentAudio.addEventListener('error', resolve);
+
+      currentAudio.play();
+    });
+  }
+
+  currentAudio = null;
+}
+</script>
 
 </body>
 </html>
+```
